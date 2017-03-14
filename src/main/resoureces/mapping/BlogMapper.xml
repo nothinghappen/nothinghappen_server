@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.BlogMapper" >
+    <insert id="insert" parameterType="models.Blog" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO blog
+        (title,createTime,author,content,isPublic,tags)
+        VALUES
+        (#{title},#{createTime},#{author},#{content},#{isPublic},#{tags})
+    </insert>
+
+    <select id="selectById" parameterType="int" resultType="models.Blog">
+        SELECT * FROM blog where id = #{id}
+    </select>
+
+    <delete id="deleteById" parameterType="int" >
+        DELETE FROM blog where id = #{id}
+    </delete>
+
+    <select id="adminCount" resultType="int">
+        SELECT count(id) FROM blog
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT count(id) FROM blog WHERE isPublic = TRUE
+    </select>
+
+    <select id="selectList" resultType="models.Blog">
+        SELECT id,title,author,tags,createTime,isPublic,SUBSTRING(content,1,300) as content
+        FROM blog
+        WHERE isPublic=TRUE ORDER BY createTime DESC
+        LIMIT #{0} , #{1};
+    </select>
+
+    <select id="selectAdminList" resultType="models.Blog">
+        SELECT id,title,author,tags,createTime,isPublic,SUBSTRING(content,1,300) as content
+        FROM blog
+        ORDER BY createTime DESC
+        LIMIT #{0} , #{1};
+    </select>
+
+    <update id="update" parameterType="models.Blog">
+        UPDATE blog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="tags != null">
+                tags = #{tags},
+            </if>
+            <if test="isPublic != null">
+                isPublic = #{isPublic},
+            </if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+    
+
+</mapper>
