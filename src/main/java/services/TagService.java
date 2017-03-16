@@ -3,6 +3,8 @@ package services;
 import dao.TagMapper;
 import models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import utils.CacheManager;
 
@@ -25,47 +27,29 @@ public class TagService {
         this.tagMapper = tagMapper;
     }
 
+    @CacheEvict(value = "TagCache",key = "'tagOwner'+#tag.ownerId")
     public void insertTag(Tag tag){
         tagMapper.insert(tag);
     }
 
+    //清空所有关于tag的缓存
+    @CacheEvict(value = "TagCache",allEntries = true)
     public void deleteTagById(int id){
         tagMapper.deleteById(id);
     }
 
+    @Cacheable(value = "TagCache",key="'tagsmap'")
     public Map<Integer,Tag> getAllTagsMap(){
-
         Map<Integer,Tag> tagsMap = new HashMap<Integer, Tag>();
-
-        List<Tag> tags = (List<Tag>)CacheManager.getOrAdd("tagsMap", new Callable() {
-            @Override
-            public Object call() throws Exception {
-                return tagMapper.selectAll();
-            }
-        });
-
-        if (tags == null){
-            return tagsMap;
-        }
+        List<Tag> tags = tagMapper.selectAll();
         for(Tag t : tags){
             tagsMap.put(t.getId(),t);
         }
         return tagsMap;
     }
 
-    public List<Tag> getAllTagsByOwnerId(final int id){
-
-        List<Tag> tags = (List<Tag>)CacheManager.getOrAdd("tags", new Callable() {
-            @Override
-            public Object call() throws Exception {
-                return tagMapper.selectAllByOwnerId(id);
-            }
-        });
-
-        if (tags != null){
-            return tags;
-        }
-
-        return new ArrayList<Tag>();
+    @Cacheable(value = "TagCache",key = "'tagOwner'+#id")
+    public List<Tag> getAllTagsByOwnerId(int id){
+        return tagMapper.selectAllByOwnerId(id);
     }
 }
