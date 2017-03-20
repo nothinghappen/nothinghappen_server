@@ -53,8 +53,8 @@ public class AdminController {
     @RequestMapping(value = "/blog",method = RequestMethod.PUT)
     @ResponseBody
     public void updateBlog(@RequestBody Blog b) {
-        b.setCreateTime(new Date());
-        System.out.println(b.getTitle());
+        b.setUpdateTime(new Date());
+        //System.out.println(b.getTitle());
         blogMapper.update(b);
     }
 

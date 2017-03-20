@@ -3,9 +3,9 @@
 <mapper namespace="dao.BlogMapper" >
     <insert id="insert" parameterType="models.Blog" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO blog
-        (title,createTime,author,content,isPublic,tags)
+        (title,createTime,author,content,isPublic,tags,updateTime)
         VALUES
-        (#{title},#{createTime},#{author},#{content},#{isPublic},#{tags})
+        (#{title},#{createTime},#{author},#{content},#{isPublic},#{tags},#{updateTime})
     </insert>
 
     <select id="selectById" parameterType="int" resultType="models.Blog">
@@ -25,14 +25,14 @@
     </select>
 
     <select id="selectList" resultType="models.Blog">
-        SELECT id,title,author,tags,createTime,isPublic,SUBSTRING(content,1,300) as content
+        SELECT id,title,author,tags,createTime,isPublic,updateTime,SUBSTRING(content,1,300) as content
         FROM blog
         WHERE isPublic=TRUE ORDER BY createTime DESC
         LIMIT #{0} , #{1};
     </select>
 
     <select id="selectAdminList" resultType="models.Blog">
-        SELECT id,title,author,tags,createTime,isPublic,SUBSTRING(content,1,300) as content
+        SELECT id,title,author,tags,createTime,isPublic,updateTime,SUBSTRING(content,1,300) as content
         FROM blog
         ORDER BY createTime DESC
         LIMIT #{0} , #{1};
@@ -58,6 +58,9 @@
             </if>
             <if test="isPublic != null">
                 isPublic = #{isPublic},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
             </if>
         </trim>
         WHERE id = #{id}

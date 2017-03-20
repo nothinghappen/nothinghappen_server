@@ -22,6 +22,9 @@ public class Blog {
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime = new Date();
 
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    private Date updateTime = new Date();
+
     private boolean isPublic = true;
 
     private String tags = "";
@@ -90,5 +93,13 @@ public class Blog {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
