@@ -16,7 +16,7 @@ public class CacheManager {
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
-    public static Object getOrAdd(String key,Callable call){
+    public static Object getOrPut(String key,Callable call){
         try {
             return cache.get(key,call);
         } catch (ExecutionException e) {

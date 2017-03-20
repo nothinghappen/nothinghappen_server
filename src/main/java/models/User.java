@@ -5,23 +5,33 @@ package models;
  */
 public class User {
 
-    private String name;
+    private int id;
 
-    private int age;
+    private String username;
 
-    public String getName() {
-        return name;
+    private String password;
+
+    public int getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getAge() {
-        return age;
+    public String getUsername() {
+        return username;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

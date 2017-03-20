@@ -36,14 +36,12 @@ public class GuavaCache implements Cache{
 
     @Override
     public ValueWrapper get(Object key) {
-        //System.out.println("get");
         Object value = cache.getIfPresent(key);
         return toValueWrapper(value);
     }
 
     @Override
     public <T> T get(Object key, Class<T> type) {
-        //System.out.println("get2");
         Object value = cache.getIfPresent(key);
         if (value != null && type != null && !type.isInstance(value)) {
             throw new IllegalStateException("Cached value is not of required type [" + type.getName() + "]: " + value);
@@ -53,25 +51,22 @@ public class GuavaCache implements Cache{
 
     @Override
     public <T> T get(Object key, Callable<T> valueLoader){
-        //System.out.println("get3");
-        T value = null;
         try {
-            value = (T)cache.get(key,valueLoader);
+            return (T)cache.get(key,valueLoader);
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
-        return value;
     }
 
     @Override
     public void put(Object key, Object value) {
-        //System.out.println("put");
+        if(value == null)
+            return;
         this.cache.put(key,value);
     }
 
     @Override
     public ValueWrapper putIfAbsent(Object key, final Object value) {
-        //System.out.println("putifabsent");
         try {
             PutIfAbsentCallable callable = new PutIfAbsentCallable(value);
             Object result = this.cache.get(key, callable);
